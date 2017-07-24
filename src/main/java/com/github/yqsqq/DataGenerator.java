@@ -7,6 +7,11 @@ import org.apache.commons.lang.math.RandomUtils;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+import static org.apache.commons.lang.RandomStringUtils.random;
+import static org.apache.commons.lang.RandomStringUtils.randomAlphabetic;
+import static org.apache.commons.lang.RandomStringUtils.randomAlphanumeric;
+import static org.apache.commons.lang.math.RandomUtils.nextInt;
+
 /**
  * Created by qsyou on 24/07/2017.
  */
@@ -21,7 +26,10 @@ public class DataGenerator {
 
     public void write() {
 
-        for (int i = 0; i < 3; i++) {
+        int fileCount = 5;
+        int recordCount = 500;
+
+        for (int i = 0; i < fileCount; i++) {
             String registerFilePath = String.format("./register00%d.csv", i);
             String signInFilePath = String.format("./sign_in00%d.csv", i);
 
@@ -29,7 +37,7 @@ public class DataGenerator {
                 CsvWriter csvRegisterWriter = new CsvWriter(registerFilePath, ',', Charset.forName("GBK"));
                 CsvWriter csvSignInWriter = new CsvWriter(signInFilePath, ',', Charset.forName("GBK"));
 
-                for (int record = 0; record < 500; record++) {
+                for (int record = 0; record < recordCount; record++) {
                     String username = getUsername();
                     String password = getPassword();
                     String[] registerRecord = {getEmail(), getDisplayName(), username, password};
@@ -37,7 +45,6 @@ public class DataGenerator {
 
                     String[] signInRecord = {"password", "0", username, password};
                     csvSignInWriter.writeRecord(signInRecord);
-
                 }
                 csvRegisterWriter.close();
                 csvSignInWriter.close();
@@ -50,24 +57,26 @@ public class DataGenerator {
     }
 
     public String getEmail() {
-        return RandomStringUtils.randomAlphanumeric(1) +
-                RandomStringUtils.random(RandomUtils.nextInt(10) + 1, (BASE + ".").toCharArray()) +
-                RandomStringUtils.randomAlphanumeric(1) + "@" +
-                RandomStringUtils.random(RandomUtils.nextInt(5) + 1, (LOWER_CASE + "0123456789").toCharArray()) +
-                "." + RandomStringUtils.random(RandomUtils.nextInt(4) + 2, LOWER_CASE.toCharArray());
+        return randomAlphanumeric(1) +
+                random(nextInt(10) + 1, (BASE + ".").toCharArray()) +
+                randomAlphanumeric(1) +
+                "@" +
+                random(nextInt(5) + 1, (LOWER_CASE + "0123456789").toCharArray()) +
+                "." +
+                random(nextInt(4) + 2, LOWER_CASE.toCharArray());
     }
 
     public String getDisplayName() {
-        return RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(18) + 1);
+        return randomAlphanumeric(nextInt(18) + 1);
     }
 
     public String getUsername() {
-        return RandomStringUtils.randomAlphabetic(1)
-                + RandomStringUtils.random(RandomUtils.nextInt(13) + 5, (BASE + "-").toCharArray());
+        return randomAlphabetic(1)
+                + random(nextInt(13) + 5, (BASE + "-").toCharArray());
     }
 
     public String getPassword() {
-        return RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(13) + 6);
+        return randomAlphanumeric(nextInt(13) + 6);
     }
 
 }
